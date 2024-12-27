@@ -1,6 +1,7 @@
 package dlog
 
 import (
+	"io"
 	"log/slog"
 	"os"
 	"runtime"
@@ -34,7 +35,9 @@ func init() {
 		panic("Unable to open log file: " + err.Error())
 	}
 
-	jsonHandler := slog.NewJSONHandler(file, &slog.HandlerOptions{
+	multiWriter := io.MultiWriter(os.Stdout, file)
+
+	jsonHandler := slog.NewJSONHandler(multiWriter, &slog.HandlerOptions{
 		AddSource: true,
 	})
 
